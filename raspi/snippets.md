@@ -1,5 +1,10 @@
 # Code snippets
 
+Those are a collection of snippets I fetched during my investigation on how to do it...
+
+
+---
+## Standalone Photobooth using RPi only
 
 from [here](https://github.com/feiticeir0/RPiPhotoBooth/blob/master/RPiPhotoBooth.py)
 
@@ -75,3 +80,5 @@ while (True):
 		#offLeds()
 GPIO.cleanup()
 ```
+
+---
