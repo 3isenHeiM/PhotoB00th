@@ -115,7 +115,7 @@ Pinning :
 * GND : ground
 
 ### Darlington arrays
-(nice explanation [here](ihttps://forum.arduino.cc/index.php?topic=157018.0))
+(nice explanation [here](https://forum.arduino.cc/index.php?topic=157018.0))
 
 The output of the ULN2803 is not supplying anything. The ULN2803 are a bunch of darlington transistor.
 They pull the output low. That is all. They have also a large voltage drop of about 1V.
