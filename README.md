@@ -29,7 +29,7 @@ By order of importance...
 
 * Serial link between Arduino and RaspberryPi to exchagne commands and feeback.
 * State machine running on both µcontrollers to listen for serial commands
-* based on serial commands, they can interact
+* Based on serial commands, they can interact
 
 ## Sources :
 * [Control 7-segment display using python](https://raspi.tv/2015/how-to-drive-a-7-segment-display-directly-on-raspberry-pi-in-python)
@@ -64,8 +64,8 @@ Here is the workflow I intially intend for this project :
 ### Arduino State machine
 
 Initial state : 
-    * LED dimmed (around 25%)
-    * Wait for event on the button
+* LED dimmed (around 25%)
+* Wait for event on the button
 
 1. When button is pressed :  
     - Display "3" on 7-segment display for 1s
@@ -98,6 +98,39 @@ Initial state :
 * Rename it
 * Update the slideshow
 4. Get back to initial state
+
+
+## Various details
+
+### How to manipulate the button
+(Learned from [here](https://learn.sparkfun.com/tutorials/reaction-timer), where they featyre the exact same button
+
+Status : 
+* Button pressed : `digitalRead(button) == LOW`
+* Button released : `digitalRead(button) == HIGH`
+
+Pinning :
+* *NO* (normally openned) pin : button trigger
+* Anode : LED anode
+* GND : ground
+
+### Darlington arrays
+(nice explanation [here](ihttps://forum.arduino.cc/index.php?topic=157018.0))
+
+The output of the ULN2803 is not supplying anything. The ULN2803 are a bunch of darlington transistor.
+They pull the output low. That is all. They have also a large voltage drop of about 1V.
+
+Pinning : 
+* 1-8 (arduino) -> 18-11 (output)  
+That is : `pin 1` will control whatever is conected on `pin 18`, `pin 2` will control the output `pin 17`, etc...
+* 10 : Common -> +12V
+* Ground -> Power supply Ground
+
+The load (led+7-segment display) has 2 connections :
+* +12VDC
+* output pin of the matching control pin
+
+When the control pin is high, the Darlington array pulls down the output pin (at +12V) to the Ground. And the current flows and you have current in whatever load you have put between the Darlington output pin and the power sypply.
 
 ## Stepping stones
 * Dimm the 12V LEDs using the Raspberry and a Darlington array (since they are 12V-powered)
