@@ -33,7 +33,7 @@ By order of importance...
 
 ## Sources :
 * [Control 7-segment display using python](https://raspi.tv/2015/how-to-drive-a-7-segment-display-directly-on-raspberry-pi-in-python)
-* [Example Contorl big button + light](https://photos.google.com/share/AF1QipOwxhytRgeDRXFwA8Ee42yeQ1euaZ-cLYzybYsmrUi8KKORaJuT7p9L6YDLRAZysg?key=M21aS3pQQjdpRG1kOW1rbjFnOWdjWldQTEpFVGtR)
+* [Example Control big button + light](https://photos.google.com/share/AF1QipOwxhytRgeDRXFwA8Ee42yeQ1euaZ-cLYzybYsmrUi8KKORaJuT7p9L6YDLRAZysg?key=M21aS3pQQjdpRG1kOW1rbjFnOWdjWldQTEpFVGtR)
 
 
 ## Bill of Materials :

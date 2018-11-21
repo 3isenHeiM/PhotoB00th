@@ -1,15 +1,9 @@
 /*
   Arduino Photobooth
 
-  Harm Aldick - 2015
-  http://www.kitesurfer1404.de/tech/photobooth/en
-  https://github.com/kitesurfer1404/photobooth
-
-
   FEATURES
     * 7-segment-display for countdown
     * LED-speedlights
-    * Pushbutton-support
     * "breathing" pushbutton-LED
     * Standalone or remote controlled operation (USB-serial)
 
@@ -88,8 +82,8 @@
 int segment_pins[] = { 2, 3, 4, 7, 8, 12, 13 }; // pins segments A-G of the display are connected to
 int spot_pins[] = { 10, 11, 5, 6 };             // pins the spot-lights are connected to, use PWM-pins here
 
-int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
-int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)
+// int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
+// int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)
 
 int pushbutton_leds[] = { 9 };  // pin(s) on which the LED(s) of the pushbutton-switch(es) is/are connected to. Use PWM-pins here.
 int pushbutton_pins[] = { 14 }; // pin(s) on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
@@ -364,6 +358,9 @@ void takePhoto() {
   delay(1000);
   displayNumber(2);
   delay(1000);
+
+  // Trigger autofocus of the camera
+  Serial.println("do_focus");
   displayNumber(1);
   delay(1000);
   
