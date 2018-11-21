@@ -122,7 +122,10 @@ They pull the output low. That is all. They have also a large voltage drop of ab
 
 Pinning : 
 * 1-8 (arduino) -> 18-11 (output)  
-That is : `pin 1` will control whatever is conected on `pin 18`, `pin 2` will control the output `pin 17`, etc...
+That is :
+  * `pin 1` will control whatever is conected on `pin 18`
+  * `pin 2` will control the output `pin 17`
+    etc...
 * 10 : Common -> +12V
 * Ground -> Power supply Ground
 
