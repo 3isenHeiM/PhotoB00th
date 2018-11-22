@@ -64,6 +64,7 @@ Here is the workflow I intially intend for this project :
 ### Arduino State machine
 
 Initial state : 
+
     - LED is "breathing" (cf Snippets.md)
     - Wait for event on the button
 
@@ -87,6 +88,7 @@ Initial state :
 ### Raspberry Pi State machine
 
 Initial state : 
+
     - Waiting for command "`do_focus`" from the Arduino
 
 1. When `do_focus` is received :
