@@ -64,8 +64,8 @@ Here is the workflow I intially intend for this project :
 ### Arduino State machine
 
 Initial state : 
-* LED dimmed (around 25%)
-* Wait for event on the button
+    - LED is "breathing" (cf Snippets.md)
+    - Wait for event on the button
 
 1. When button is pressed :  
     - Display "3" on 7-segment display for 1s
@@ -79,7 +79,7 @@ Initial state :
     - Send commant "`do_focus`" via serial to the RPi
     - Light the button for 0.5s
 4. Take the photo : 
-     - Increase lights of the LED to 100%
+    - Increase lights of the LED to 100%
     - Send command "`take_picture`" via serial to the RPi
     - Wait for command "`picture_taken`" from the serial port
 5. Get back to initial state
@@ -87,16 +87,18 @@ Initial state :
 ### Raspberry Pi State machine
 
 Initial state : 
-* Waiting for command "`do_focus`" from the Arduino
+    - Waiting for command "`do_focus`" from the Arduino
 
-1. When `do_focus` si received :
-* use gphoto to do the focus (not sure if supported)
+1. When `do_focus` is received :
+    - use gphoto to do the focus (not sure if supported)
 2. When `take-picture` is received : 
-* use gphoto to `capture-image-and-download`
+    - use gphoto to `capture-image-and-download`
+    - send `picture_taken` to Arduino
 3. Post-process the image :
-* Move it the the correct folder
-* Rename it
-* Update the slideshow
+    - Apply a filter ? (if fast enough : 3-4s)
+    - Move it the the correct folder
+    - Rename it
+    - Update the slideshow
 4. Get back to initial state
 
 
@@ -136,5 +138,5 @@ The load (led+7-segment display) has 2 connections :
 When the control pin is high, the Darlington array pulls down the output pin (at +12V) to the Ground. And the current flows and you have current in whatever load you have put between the Darlington output pin and the power sypply.
 
 ## Stepping stones
-* Dimm the 12V LEDs using the Raspberry and a Darlington array (since they are 12V-powered)
+- [x] Dim the 12V LEDs using the Raspberry and a Darlington array (since they are 12V-powered)   
     Solution : Use an Arduino Uno for all GPIO-related events.
