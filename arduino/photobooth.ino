@@ -79,8 +79,10 @@
 
 /* This is where you might define different IO-pins */
 
-int segment_pins[] = { 2, 3, 4, 7, 8, 12, 13 }; // pins segments A-G of the display are connected to
-int spot_pins[] = { 10, 11, 5, 6 };             // pins the spot-lights are connected to, use PWM-pins here
+
+// TO BE CHANGED REGARDING PWM PINS !!!
+int segment_pins[] = { 2, 3, 4, 5, 6, 7, 8}; // pins segments A-G of the display are connected to
+int spot_pins[] = { 10, 11, 12, 13 };             // pins the spot-lights are connected to, use PWM-pins here
 
 // int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
 // int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)

@@ -104,6 +104,11 @@ Initial state :
 
 ## Various details
 
+### PWM pins on the Arduino
+reference [here](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/)
+
+On most Arduino boards (those with the ATmega168 or ATmega328P), this function works on pins `3`, `5`, `6`, `9`, `10`, and `11`. 
+
 ### How to manipulate the button
 (Learned from [here](https://learn.sparkfun.com/tutorials/reaction-timer), where they featyre the exact same button
 
