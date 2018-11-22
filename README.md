@@ -64,9 +64,8 @@ Here is the workflow I intially intend for this project :
 ### Arduino State machine
 
 Initial state : 
-
-    - LED is "breathing" (cf Snippets.md)
-    - Wait for event on the button
+ - LED is "breathing" (cf Snippets.md)
+ - Wait for event on the button
 
 1. When button is pressed :  
     - Display "3" on 7-segment display for 1s
@@ -88,8 +87,7 @@ Initial state :
 ### Raspberry Pi State machine
 
 Initial state : 
-
-    - Waiting for command "`do_focus`" from the Arduino
+ - Waiting for command "`do_focus`" from the Arduino
 
 1. When `do_focus` is received :
     - use gphoto to do the focus (not sure if supported)
