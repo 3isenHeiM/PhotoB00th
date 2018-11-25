@@ -19,7 +19,7 @@ By order of importance...
 
 ## Design
 
-* RaspberryPi : 
+* RaspberryPi :
   * Controls the DLSR
   * Setup the slideshow
 * Arduino :
@@ -63,7 +63,7 @@ Here is the workflow I intially intend for this project :
 
 ### Arduino State machine
 
-Initial state : 
+Initial state :
  - LED is "breathing" (cf Snippets.md)
  - Wait for event on the button
 
@@ -74,11 +74,11 @@ Initial state :
 2. After 1s :
     - Display "2" on the 7-segment display for 1s
     - Light the button for 0.5s
-3. After 1s : 
+3. After 1s :
     - Display "1" on the 7-segment display for 1s
     - Send commant "`do_focus`" via serial to the RPi
     - Light the button for 0.5s
-4. Take the photo : 
+4. Take the photo :
     - Increase lights of the LED to 100%
     - Send command "`take_picture`" via serial to the RPi
     - Wait for command "`picture_taken`" from the serial port
@@ -86,12 +86,12 @@ Initial state :
 
 ### Raspberry Pi State machine
 
-Initial state : 
+Initial state :
  - Waiting for command "`do_focus`" from the Arduino
 
 1. When `do_focus` is received :
     - use gphoto to do the focus (not sure if supported)
-2. When `take-picture` is received : 
+2. When `take-picture` is received :
     - use gphoto to `capture-image-and-download`
     - send `picture_taken` to Arduino
 3. Post-process the image :
@@ -107,12 +107,12 @@ Initial state :
 ### PWM pins on the Arduino
 reference [here](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/)
 
-On most Arduino boards (those with the ATmega168 or ATmega328P), this function works on pins `3`, `5`, `6`, `9`, `10`, and `11`. 
+On most Arduino boards (those with the ATmega168 or ATmega328P), this function works on pins `3`, `5`, `6`, `9`, `10`, and `11`.
 
 ### How to manipulate the button
 (Learned from [here](https://learn.sparkfun.com/tutorials/reaction-timer), where they featyre the exact same button
 
-Status : 
+Status :
 * Button pressed : `digitalRead(button) == LOW`
 * Button released : `digitalRead(button) == HIGH`
 
@@ -127,7 +127,7 @@ Pinning :
 The output of the ULN2803 is not supplying anything. The ULN2803 are a bunch of darlington transistor.
 They pull the output low. That is all. They have also a large voltage drop of about 1V.
 
-Pinning : 
+Pinning :
 * 1-8 (arduino) -> 18-11 (output)  
 That is :
   * `pin 1` will control whatever is conected on `pin 18`
@@ -145,3 +145,6 @@ When the control pin is high, the Darlington array pulls down the output pin (at
 ## Stepping stones
 - [x] Dim the 12V LEDs using the Raspberry and a Darlington array (since they are 12V-powered)   
     Solution : Use an Arduino Uno for all GPIO-related events.
+
+## Canon EOS 700D support
+I used a Canon EOS 700D DSLR camera, the [following page](CanonEOS700D.md) liksts the suported operations of gphoto for this type of camera
