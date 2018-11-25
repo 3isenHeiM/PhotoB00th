@@ -80,15 +80,15 @@
 /* This is where you might define different IO-pins */
 
 
-// TO BE CHANGED REGARDING PWM PINS !!!
-int segment_pins[] = { 2, 3, 4, 5, 6, 7, 8}; // pins segments A-G of the display are connected to
-int spot_pins[] = { 10, 11, 12, 13 };             // pins the spot-lights are connected to, use PWM-pins here
+int segment_pins[] = { 2, 3, 4, 7, 8, 12, 13}; // pins segments A-G of the display are connected to
+int spot_pins[] = { 6, 9, 10, 11 };             // pins the spot-lights are connected to, use PWM-pins here
 
 // int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
 // int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)
 
-int pushbutton_leds[] = { 9 };  // pin(s) on which the LED(s) of the pushbutton-switch(es) is/are connected to. Use PWM-pins here.
-int pushbutton_pins[] = { 14 }; // pin(s) on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
+// TODO : check numbering of the A0 pin of the Arduino
+int button_led[] = { 5 };  // pin(s) on which the LED(s) of the pushbutton-switch(es) is/are connected to. Use PWM-pins here.
+int button_pin[] = { 14 }; // pin(s) on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
 int lastButtonState[] = { 1 };  // saving the last state(s) of the button(s)
 
 
@@ -143,21 +143,21 @@ void setup() {
   }
   
   // Set all pushbutton-LED-pins as output and turn LEDs off
-  for(int i = 0; i < sizeof(pushbutton_leds)/sizeof(int); i++) {
-    pinMode(pushbutton_leds[i], OUTPUT);
-    digitalWrite(pushbutton_leds[i], LOW);
+  for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
+    pinMode(button_led[i], OUTPUT);
+    digitalWrite(button_led[i], LOW);
   }
   
   // Set all pushbutton-pins as input and enable pullup resistor
-  for(int i = 0; i < sizeof(pushbutton_pins)/sizeof(int); i++) {
-    pinMode(pushbutton_pins[i], INPUT_PULLUP); // change INPUT_PULLUP to INPUT when there is an external pullup-resistor attached
+  for(int i = 0; i < sizeof(button_pin)/sizeof(int); i++) {
+    pinMode(button_pin[i], INPUT_PULLUP); // change INPUT_PULLUP to INPUT when there is an external pullup-resistor attached
   }
   
   // setup focus and shutter pins
-  pinMode(pin_focus, OUTPUT);
-  digitalWrite(pin_focus, LOW);
-  pinMode(pin_shutter, OUTPUT);
-  digitalWrite(pin_shutter, LOW);
+  //pinMode(pin_focus, OUTPUT);
+  //digitalWrite(pin_focus, LOW);
+  //pinMode(pin_shutter, OUTPUT);
+  //digitalWrite(pin_shutter, LOW);
   
   
   Serial.begin(9600); // initialize serial
@@ -173,8 +173,8 @@ void setup() {
 /* turns all breathing LEDs gently on and resets everything for restart breathing */
 void breathing_reset() {
   for(int i = 0; i <= 15; i++) {
-    for(int p = 0; p < sizeof(pushbutton_leds)/sizeof(int); p++) {
-      analogWrite(pushbutton_leds[p], i);
+    for(int p = 0; p < sizeof(button_led)/sizeof(int); p++) {
+      analogWrite(button_led[p], i);
     }
     delay(10);
   }
@@ -189,8 +189,8 @@ void breathing_reset() {
 
 /* turns all breathing LEDs off and disables breathing at all */
 void breathing_stop() {
-  for(int i = 0; i < sizeof(pushbutton_leds)/sizeof(int); i++) {
-    analogWrite(pushbutton_leds[i], 0);
+  for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
+    analogWrite(button_led[i], 0);
   }
   breathing_enabled = false;
 }
@@ -228,8 +228,8 @@ void breathing_do_step() {
     breath_delay = breath_delay_steps[breath_index];
   
     // set new brightness to all pushbutton leds
-    for(int i = 0; i < sizeof(pushbutton_leds)/sizeof(int); i++) {
-      analogWrite(pushbutton_leds[i], breath_brightness);
+    for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
+      analogWrite(button_led[i], breath_brightness);
     }
 
   } else {
@@ -377,8 +377,8 @@ void takePhoto() {
   
   clearAll();
 
-  digitalWrite(pin_focus, LOW);
-  digitalWrite(pin_shutter, LOW);
+  //digitalWrite(pin_focus, LOW);
+  //digitalWrite(pin_shutter, LOW);
   
   Serial.println("Photo taken.");
 }
@@ -443,8 +443,8 @@ void loop() {
   breathing_do_step(); // do one step in "breathing"
 
   // check all pushbuttons for changes
-  for(int i = 0; i < sizeof(pushbutton_pins)/sizeof(int); i++) {
-    if(digitalRead(pushbutton_pins[i]) == LOW) {  // if button is pressed
+  for(int i = 0; i < sizeof(button_pin)/sizeof(int); i++) {
+    if(digitalRead(button_pin[i]) == LOW) {  // if button is pressed
       if (lastButtonState[i] == HIGH) {             // and was not pressed before
         lastButtonState[i] = LOW;                     // save current state (pressed)
         if(mode_auto) {                               // in standalone-mode...
