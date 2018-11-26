@@ -115,7 +115,7 @@ Initial state :
 ## Various details
 
 ### PWM pins on the Arduino
-reference [here](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/)
+Reference [here](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/)
 
 On most Arduino boards (those with the ATmega168 or ATmega328P), this function works on pins `3`, `5`, `6`, `9`, `10`, and `11`.
 They are indicated by a `~` besides their number on the Arduino.
@@ -133,7 +133,7 @@ Pinning :
 * GND : ground
 
 ### Darlington arrays
-(nice explanation [here](https://forum.arduino.cc/index.php?topic=157018.0))
+Nice explanation [here](https://forum.arduino.cc/index.php?topic=157018.0)
 
 The output of the ULN2803 is not supplying anything. The ULN2803 are a bunch of darlington transistor.
 They pull the output low. That is all. They have also a large voltage drop of about 1V.
