@@ -37,15 +37,25 @@ By order of importance...
 
 
 ## Bill of Materials :
-* [Big Red Arcade button](https://www.adafruit.com/product/1185) - Adafruit
+* [Arduino Uno - R3](https://www.sparkfun.com/products/11021) - Sparkfun - 24.95$
+* [Breadboard - Self-Adhesive (White)](https://www.sparkfun.com/products/12002) - Sparkfun - 4.95$
 * [Big Red dome button](https://www.sparkfun.com/products/9181) - Sparkfun - 11.95$
   12V supply
 * [7-Segment display 6,5"](https://www.sparkfun.com/products/8530) - Sparkfun - 18.95$
   12V supply
-* [Jumper wires M/F](https://www.sparkfun.com/products/9140) - Sparkfun - 3.95$
-  10x 6,5" Jumper cables Male/Female (to connect with RPi)
-* 4 LED MR16 Spotlight 12V 4W
+* [Jumper Wires Premium 4" M/M - 26 AWG (30 Pack)](https://www.sparkfun.com/products/14284) - Sparkfun - 1.95$
+  (to connect with RPi)
+* [Darlington Driver 8-Channel ULN2803 DIP](https://www.sparkfun.com/products/312) - Sparkfun - 1.95$
+  2 pieves
+* [Jumper Wire Kit - 140pcs](https://www.sparkfun.com/products/124) - Sparkfun - 5.95$
+* [DC Barrel Jack Adapter - Breadboard Compatible](https://www.sparkfun.com/products/10811) - Sparkfun - 0.95$
+  to bring 12V on the breadboard
+* [Resistor 1K Ohm 1/4 Watt PTH - 20 pack (Thick Leads) ](https://www.sparkfun.com/products/14492) - Sparkfun - 0.95$
+* [4 LED MR16 Spotlight 12V 4W](https://www.miniinthebox.com/en/p/10pcs-dimmable-mr16-4w-4x1w-400lm-warm-white-white-cool-white-led-light-spot-lamp-dc12v_p2343919.html?prm=2.18.104.0) - MiniInTheBox.com - 17.38€ for 10.
 * [10pc MR16 Sockets](https://www.amazon.com/Glo-shine-Halogen-Ceramic-Connector-Adapter/dp/B00Y7GRGZ0) - Amazon - 7.71$
+* [Arduino and Breadboard Holder](https://www.sparkfun.com/products/11235) - Sparkfun - 3.95$
+
+
 
 ## Workflow
 Here is the workflow I intially intend for this project :

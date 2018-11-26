@@ -10,8 +10,14 @@ The Arduino is used to be able to dim the lisght of the big 4 LEDs. The dim is d
 cf main ReadMe.md
 
 
-## Wiring Diagram
-![Arduino Photobooth](https://raw.githubusercontent.com/3isenHeiM/Photob00th/master/arduino/arduino_photobooth.jpg)
+
+## Updated Wiring Diagram
+The connections are done using a small breadboard.
+
+![Arduino Photobooth](https://raw.githubusercontent.com/3isenHeiM/Photob00th/master/arduino/breadboard.png)
+
+## Previous Wiring Diagram
+![Arduino Photobooth2](https://raw.githubusercontent.com/3isenHeiM/Photob00th/master/arduino/arduino_photobooth.jpg)
 
 
 
