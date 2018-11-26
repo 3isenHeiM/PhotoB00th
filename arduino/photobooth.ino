@@ -31,12 +31,12 @@
     
        Segment     Pin (Arduino)
           A         2
-          B         3
-          C         4
-          D         7
-          E         8
-          F        12
-          G        13
+          B         4
+          C         7
+          D         8
+          E        10
+          F        11
+          G        12
 
       Use darlington array and and current limiting resistors as appropriate.
     * See repository for example circuit.
@@ -80,15 +80,15 @@
 /* This is where you might define different IO-pins */
 
 
-int segment_pins[] = { 2, 3, 4, 7, 8, 12, 13}; // pins segments A-G of the display are connected to
-int spot_pins[] = { 6, 9, 10, 11 };             // pins the spot-lights are connected to, use PWM-pins here
+int segment_pins[] = { 2, 4, 7, 8, 11, 12, 13}; // pins segments A-G of the display are connected to
+int spot_pins[] = { 3, 5, 6, 9};             // pins the spot-lights are connected to, use PWM-pins here
 
 // int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
 // int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)
 
 // TODO : check numbering of the A0 pin of the Arduino
-int button_led[] = { 5 };  // pin(s) on which the LED(s) of the pushbutton-switch(es) is/are connected to. Use PWM-pins here.
-int button_pin[] = { 14 }; // pin(s) on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
+int button_led[] = { 10 };  // pin(s) on which the LED(s) of the pushbutton-switch(es) is/are connected to. Use PWM-pins here.
+int button_pin[] = { 1 }; // pin(s) on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
 int lastButtonState[] = { 1 };  // saving the last state(s) of the button(s)
 
 
