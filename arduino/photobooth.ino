@@ -438,26 +438,25 @@ void serialEvent() {
   }
 }
 
-// This loop function runs over and over again. Forever. Poor little thing.
+// This loop function runs over and over again. 
 void loop() {
 
   breathing_do_step(); // do one step in "breathing"
 
-  // check all pushbuttons for changes
+  // check pushbuttons for changes
   for(int i = 0; i < sizeof(button_pin)/sizeof(int); i++) {
-    if(digitalRead(button_pin[i]) == LOW) {  // if button is pressed
-      if (lastButtonState[i] == HIGH) {             // and was not pressed before
+    if(digitalRead(button_pin[i]) == LOW) {           // if button is pressed
+      if (lastButtonState[i] == HIGH) {               // and was not pressed before
         lastButtonState[i] = LOW;                     // save current state (pressed)
         if(mode_auto) {                               // in standalone-mode...
-          inputCommand = "take photo";                  // set command
+          inputCommand = "take photo";                // set command
           commandComplete = true;
         } else {                                      // in remote-controlled mode...
-          Serial.print("P");                            // notify computer which button was pressed
-          Serial.println(i);
+          Serial.println("button pressed");             // notify computer 
         }
       }
       delay(250);                                  // poor mans debouncing
-    } else {                                     // if button is not pressed
+    } else {                                        // if button is not pressed
       lastButtonState[i] = HIGH;                   // save state (released)
     }
   }

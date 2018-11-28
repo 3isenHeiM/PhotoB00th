@@ -1,5 +1,7 @@
 # Canon EOS 700D and gphoto2
 
+` gphoto2 --capture-image-and-download --filename "%Y-%m-%d %H:%M:%S.jpg" `
+
 ## Supported operations
 ```
 gphoto2 --list-config
@@ -96,5 +98,11 @@ Type: TEXT
 Current: 30
 END
 ```
+
+### Set Manual Focus
+`--set-config manualfocusdrive=Mode` where mode is "Near 1" "Near 2" "Near 3" "Far 1" "Far 2" "Far 3".
+These are 3 different relative stepsizes for both focusing directions. To achieve focusing, multiple calls might need to be done.
+
+
 ## Useful links
 * [gphoto on MacOS](http://photolifetoys.blogspot.com/2012/08/control-your-camera-with-gphoto2-via.html)
