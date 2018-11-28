@@ -29,14 +29,15 @@
     * Read the datasheet of your 7-segment-display for pin-layout. 
       Connect this way:
     
-       Segment     Pin (Arduino)
-          A         2
-          B         4
-          C         7
-          D         8
-          E        10
-          F        11
-          G        12
+       Segment     Pin (7-segment) Pin (Darlington)    Pin (Arduino)
+          A         1               1-18                13
+          B         8               4                   8
+          C         7               7                   2
+          D         6               6                   4
+          E         4               5                   7
+          F         2               2                   12
+          G         3               3                   11
+          DP        9               --
 
       Use darlington array and and current limiting resistors as appropriate.
     * See repository for example circuit.
@@ -80,8 +81,8 @@
 /* This is where you might define different IO-pins */
 
 
-int segment_pins[] = { 2, 4, 7, 8, 11, 12, 13}; // pins segments A-G of the display are connected to
-int spot_pins[] = { 3, 5, 6, 9};             // pins the spot-lights are connected to, use PWM-pins here
+int segment_pins[] = { 13, 8, 2, 4, 7, 12, 11}; // pins segments A-G of the display are connected to
+int spot_pins[] = { 9, 6, 5, 3};             // pins the spot-lights are connected to, use PWM-pins here
 
 // int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
 // int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)
