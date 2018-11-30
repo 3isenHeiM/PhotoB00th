@@ -103,6 +103,29 @@ END
 `--set-config manualfocusdrive=Mode` where mode is "Near 1" "Near 2" "Near 3" "Far 1" "Far 2" "Far 3".
 These are 3 different relative stepsizes for both focusing directions. To achieve focusing, multiple calls might need to be done.
 
+### Time difference
+
+1. Capture target on internal memory  
+`gphoto2 --set-config-index /main/settings/capturetarget=1`  
+
+```
+time gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"
+New file is in location /store_00020001/DCIM/100CANON/IMG_2523.JPG on the camera
+Saving file as 2018-11-30_21:22:42.jpg
+Deleting file /store_00020001/DCIM/100CANON/IMG_2523.JPG on the camera
+gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"  0.13s user 0.15s system 4% cpu 6.517 total
+```
+2. Capture target on SD card  
+`gphoto2 --set-config-index /main/settings/capturetarget=0`  
+
+```
+time gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"
+New file is in location /capt0000.jpg on the camera
+Saving file as 2018-11-30_20:18:22.jpg
+Deleting file /capt0000.jpg on the camera
+gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"  0.14s user 0.11s system 7% cpu 3.431 total
+```
+
 
 ## Useful links
 * [gphoto on MacOS](http://photolifetoys.blogspot.com/2012/08/control-your-camera-with-gphoto2-via.html)
