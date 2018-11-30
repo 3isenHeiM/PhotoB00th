@@ -4,6 +4,7 @@ SCRIPT=$(realpath $0)
 BASEDIR=$(dirname $SCRIPT)
 
 EXTENSION_JPG="JPG"
+#EXTENSION_JPG="jpg" # Changed to small letters for debugging of the script
 EXTENSION_RAW="CR2"
 
 TARGET_DIR_JPG="$BASEDIR/images/jpg"
@@ -19,9 +20,11 @@ TARGET_DIR_PROCESSED="$BASEDIR/images/processed"
 #CONVERT_FILTER_FX="-modulate 120,10,100 -fill #222b6d -colorize 25 -gamma 0.7 -contrast"
 
 ### LOMO
+# 4s per image
 #CONVERT_FILTER_FX="-channel R -level 10% -channel G -level 10%"
 
 ### 80s PHOTOGRAPH
+# 20s pr image to convert
 #CONVERT_FILTER_FX="-set colorspace RGB ( -clone 0 -fill #222b6d -colorize 100% ) ( -clone 0 -colorspace gray -negate ) -compose blend -define compose:args=35,65 -composite ( -clone 0 -fill #f7daae -colorize 100% ) ( -clone 0 -colorspace gray ) -compose blend -define compose:args=35,65 -composite -contrast -modulate 100,150,100 -auto-gamma"
 
 ### POLAROID
@@ -42,23 +45,27 @@ CONVERT_CROP_OPTIONS="-crop 1800x1200+300+400"
 IMAGE_COUNT_FILE="$BASEDIR/image_count.txt"
 
 function process_jpg {
-  #echo "Processing $1"
+  echo "Processing $1"
 
   tmp=$(find "$TARGET_DIR_PROCESSED" -type f | wc -l)
-  #echo "Processed images: $tmp"
+  echo "Processed images: $tmp"
 
   imgcount=$((tmp+1))
   output_filename="$TARGET_DIR_PROCESSED/$imgcount.$EXTENSION_JPG"
-  #echo "Output filename: $output_filename"
+  echo "Output filename: $output_filename"
 
   convert "${1}" $CONVERT_FILTER_FX $CONVERT_RESIZE_OPTIONS $CONVERT_CROP_OPTIONS "$output_filename"
 
-  #echo "Updating image count file"
+  echo "Updating image count file"
   echo "$imgcount" > "$IMAGE_COUNT_FILE"
 }
 
 
 #echo "gphoto ACTION=$ACTION"
+
+ACTION="download"
+echo $HASEDIR
+
 
 if [[ $ACTION == "download" ]]; then
 
@@ -68,12 +75,12 @@ if [[ $ACTION == "download" ]]; then
   files=$(ls $BASEDIR/*.$EXTENSION_JPG 2> /dev/null | wc -l)
   if [ "$files" -gt 0 ]
   then
-    #echo "$files new .$EXTENSION_JPG"
+    echo "$files new .$EXTENSION_JPG"
     
     for f in $BASEDIR/*.$EXTENSION_JPG
     do
       process_jpg "$f"
-      #echo "moving "$f" to $TARGET_DIR_JPG" 
+      echo "moving "$f" to $TARGET_DIR_JPG" 
       mv "$f" "$TARGET_DIR_JPG"
     done
   fi
@@ -83,10 +90,10 @@ if [[ $ACTION == "download" ]]; then
   files=$(ls $BASEDIR/*.$EXTENSION_RAW 2> /dev/null | wc -l)
   if [ "$files" -gt 0 ]
   then
-    #echo "$files new .$EXTENSION_RAW"
-    #echo "moving *.$EXTENSION_RAW to $TARGET_DIR_RAW" 
+    echo "$files new .$EXTENSION_RAW"
+    echo "moving *.$EXTENSION_RAW to $TARGET_DIR_RAW" 
     mv *.$EXTENSION_RAW "$TARGET_DIR_RAW"
   fi
 
-  #echo "done."
+  echo "done."
 fi
