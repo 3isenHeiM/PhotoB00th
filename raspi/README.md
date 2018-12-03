@@ -324,3 +324,15 @@ Credits for the Ken Burns effect go to:
 http://cssmojo.com/ken-burns-effect/
 http://www.css-101.org/articles/ken-burns_effect/css-transition.php
 
+
+
+### Image resising
+
+
+resize.py takes car of resinsing the image to a FullHD (1920x1080). Inspired from [here](https://www.blog.pythonlibrary.org/2017/10/12/how-to-resize-a-photo-with-python/)
+```
+# python resize.py 
+  Original image : 5184x3456
+  Scaled image : 1920x1280
+  Elapsed time: 1.178s
+```
