@@ -2,16 +2,16 @@
 
 Here a a couple of code snippets I used during this projet.
 
-#### List the capabilities of a camera : 
+## List the capabilities of a camera : 
 `gphoto2 --list-all-config >config.txt`
 
 
 Display `config.txt` to see what is supported.
 
-#### Disable IPv6 on Raspberry 
+## Disable IPv6 on Raspberry 
 Reference [here](https://askubuntu.com/a/309463/217297)
 
-#### Python Serail port and commands
+## Python Serail port and commands
 Reference [here](https://stackoverflow.com/questions/676172/full-examples-of-using-pyserial-package)
 
 ```
@@ -54,12 +54,14 @@ while 1 :
           print ">>" + out
 ```
 
-### Capture and download using python
+## Capture and download using python
 
 From python-gphoto2 [examples](https://github.com/jim-easterbrook/python-gphoto2/blob/master/examples/capture-image.py).
 Two functions are used : 
-* `gp.gp_camera_capture(camera, gp.GP_CAPTURE_IMAGE)` to trigger the shot
-* `gp.gp_camera_file_get(camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL)` to download the image
+* `gp.gp_camera_capture(camera, gp.GP_CAPTURE_IMAGE)`  
+to trigger the shot
+* `gp.gp_camera_file_get(camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL)`  
+to download the image
 
 ```
 #!/usr/bin/env python
