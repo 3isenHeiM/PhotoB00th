@@ -37,7 +37,7 @@ function kenburns() {
   }
 
   kenburns_index++;
-  kenburns_timer = setTimeout(kenburns,kenburns_interval*1000);
+  kenburns_timer = setTimeout(kenburns,kenburns_interval*2000);
 }
 
 function start_kenburns(target) { 
@@ -49,7 +49,7 @@ function start_kenburns(target) {
   
   $(target).append('<div id="imagecache" style="display:none; width:0; height:0;"></div>');
 
-  kenburns_timer = setTimeout(kenburns,kenburns_interval*1000);
+  kenburns_timer = setTimeout(kenburns,kenburns_interval*2000);
   //console.log("kenburns started");
 }
 
@@ -84,7 +84,7 @@ function load_new_images() {
       }
     }
   });
-  ajax_timer = setTimeout(load_new_images,ajax_interval*1000);
+  ajax_timer = setTimeout(load_new_images,ajax_interval*500);
 }
 
 $(document).ready(function(){

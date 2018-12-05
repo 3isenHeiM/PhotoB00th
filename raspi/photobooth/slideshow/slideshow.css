@@ -1,7 +1,7 @@
 * {
   margin:0;
   padding:0;
-  cursor:none;
+//  cursor:none;
 }
 
 html {
@@ -28,34 +28,44 @@ body {
   width:100%;
 }
 
+/* Size of the frame in which the pictures area ppearing
+   1530x1020
+   1280x860   -> 16/9
+   1440x960     4/3 
+   1680x1120    4/3
+*/
 #slideshow {
   position:relative;
   margin:auto;
-  width:1280px;
-  height:860px;
+  width:1500px;
+  height:1000px;
   overflow:hidden;
-  border:10px solid #C0C0C0;
+  border:2px solid #C0C0C0;
 }
 
+/* Size of the picture moving into the frame
+    This should rtespect the oroginal ratio of the picture itself
+    In our case : 1920x1200 => 4/3
+*/
 #slideshow img {
   position:absolute;
-  width:1280px;
-  height:860px;
+  width:1620px;
+  height:1080px;
   top:50%;
   left:50%;
-  margin-left:-640px;
-  margin-top:-430px;
+  margin-left:-850px;
+  margin-top:-530px;
   opacity:0;
   -webkit-transition-property: opacity, -webkit-transform;
-  -webkit-transition-duration: 3s, 10s;
+  -webkit-transition-duration: 2s, 10s;
      -moz-transition-property: opacity, -moz-transform;
-     -moz-transition-duration: 3s, 10s;
+     -moz-transition-duration: 2s, 10s;
       -ms-transition-property: opacity, -ms-transform;
-      -ms-transition-duration: 3s, 10s;
+      -ms-transition-duration: 2s, 10s;
        -o-transition-property: opacity, -o-transform;
-       -o-transition-duration: 3s, 10s;
+       -o-transition-duration: 2s, 10s;
           transition-property: opacity, transform;
-          transition-duration: 3s, 10s;
+          transition-duration: 2s, 10s;
 }
 
 #slideshow img  {
