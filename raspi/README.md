@@ -4,7 +4,7 @@ Raspberry Pi Photobooth
 This part describes the setup and contains the code to be run on the RasPi.
 
 You will need a RasPi 3 Mod. B for this setup due to image-processing-power and
-WiFi capability. 
+WiFi capability.
 
 If you use an older model, please adjust the WiFi as needed.
 
@@ -37,7 +37,8 @@ sudo update-rc.d ssh enable
 
 Install gphoto2 and imagemagick on your RasPi:
 ```shell
-sudo apt install gphoto2 imagemagick
+sudo apt install gphoto2 imagemagick libgphoto2-dev
+sudo pip install pkgconfig gphoto2
 ```
 
 Disable auto-mount of cameras:
@@ -48,7 +49,7 @@ sudo chmod -x /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
 Download or copy the photobooth folder to /home/pi on your RasPi.
 
 
-Edit .bashrc 
+Edit .bashrc
 ```shell
 nano .bashrc
 ```
@@ -128,7 +129,7 @@ sudo service dhcpcd restart
 sudo ifdown wlan0; sudo ifup wlan0
 ```
 
-Edit hostapd config. 
+Edit hostapd config.
 
 ```shell
 sudo nano /etc/hostapd/hostapd.conf
@@ -196,7 +197,7 @@ sudo service hostapd start
 sudo service dnsmasq start
 ```
 
-Check. Double check. 
+Check. Double check.
 
 ```shell
 sudo reboot
@@ -225,7 +226,7 @@ You might also want to try to add dtoverlay=gpio-shutdown,gpio-pin=X to /boot/co
 
 Please refer to the gphoto section below for gphoto setup for your specific camera model!
 
-You might then reboot and enjoy the photobooth slideshow on 
+You might then reboot and enjoy the photobooth slideshow on
 http://10.0.0.1:8000
 
 
@@ -290,8 +291,8 @@ Choice: 1 Memory card
 
 **Update photobooth.sh to your needs.**
 
-gphoto waits for a photo to be taken and then downloads the photo to the 
-RasPi. After downloading, the images are processed by postprocessing.sh 
+gphoto waits for a photo to be taken and then downloads the photo to the
+RasPi. After downloading, the images are processed by postprocessing.sh
 
 You can test this manually if needed:
 
@@ -331,7 +332,7 @@ http://www.css-101.org/articles/ken-burns_effect/css-transition.php
 
 resize.py takes car of resinsing the image to a FullHD (1920x1080). Inspired from [here](https://www.blog.pythonlibrary.org/2017/10/12/how-to-resize-a-photo-with-python/)
 ```
-# python resize.py 
+# python resize.py
   Original image : 5184x3456
   Scaled image : 1920x1280
   Elapsed time: 1.178s
