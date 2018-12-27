@@ -105,17 +105,7 @@ These are 3 different relative stepsizes for both focusing directions. To achiev
 
 ### Time difference
 
-1. Capture target on internal memory  
-`gphoto2 --set-config-index /main/settings/capturetarget=1`  
-
-```
-time gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"
-New file is in location /store_00020001/DCIM/100CANON/IMG_2523.JPG on the camera
-Saving file as 2018-11-30_21:22:42.jpg
-Deleting file /store_00020001/DCIM/100CANON/IMG_2523.JPG on the camera
-gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"  0.13s user 0.15s system 4% cpu 6.517 total
-```
-2. Capture target on SD card  
+1. Capture target on internal memory   
 `gphoto2 --set-config-index /main/settings/capturetarget=0`  
 
 ```
@@ -124,6 +114,16 @@ New file is in location /capt0000.jpg on the camera
 Saving file as 2018-11-30_20:18:22.jpg
 Deleting file /capt0000.jpg on the camera
 gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"  0.14s user 0.11s system 7% cpu 3.431 total
+```
+2. Capture target on SD card
+`gphoto2 --set-config-index /main/settings/capturetarget=1`  
+
+```
+time gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"
+New file is in location /store_00020001/DCIM/100CANON/IMG_2523.JPG on the camera
+Saving file as 2018-11-30_21:22:42.jpg
+Deleting file /store_00020001/DCIM/100CANON/IMG_2523.JPG on the camera
+gphoto2 --capture-image-and-download --filename "%Y-%m-%d_%H:%M:%S.jpg"  0.13s user 0.15s system 4% cpu 6.517 total
 ```
 
 
