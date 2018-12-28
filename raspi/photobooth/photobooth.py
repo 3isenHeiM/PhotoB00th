@@ -67,8 +67,6 @@ def initCamera(camera, context):
             logging.error("Camera not found, trying again in 2s...")
             time.sleep(2)
 
-    # continue with rest of program
-
     # Get configuration tree
     cameraConfig = gp.check_result(gp.gp_camera_get_config(camera))
     # Get Camera model
@@ -114,6 +112,7 @@ def takePhoto(camera, pictureFolder):
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
     newPictureFile = os.path.join(pictureFolder, timestamp)
 
+    # Save the picture to the indicated folder
     gp.check_result(gp.gp_file_save(pictureFile, newPictureFile))
     logging.info('New picture : ', newPictureFile)
 
@@ -134,7 +133,6 @@ def logging_level(verbosity):
         logging.DEBUG       # 10
     ]
     return levels[max(min(len(levels) - 1, verbosity), 0)]
-
 
 def configureLogging(numeric_level, logfile, console):
     ## VARIABLES
@@ -168,8 +166,11 @@ def configureLogging(numeric_level, logfile, console):
         # add the handler to the root logger
         logging.getLogger("").addHandler(filehandler)
 
-    logging.info("Logging level set to %s", logging_level(numeric_level))
-    #logging.getLogger('gphoto2').setLevel(logging.WARNING)
+    logging.infox("Logging level set to %s", logging_level(numeric_level))
+
+    # Have Gphot2 lgos in python logging module
+    gp.use_python_logging()
+    logging.getLogger('gphoto2').setLevel(logging.DEBUG)
 
     return logging
 
@@ -198,18 +199,28 @@ def restart():
     os.chdir(_startup_cwd)
     os.execv(sys.executable, args)
 
-
 def initSerial():
-    # Configure serial comminunication RaspberryPi-Arduino
-    ser = serial.Serial(
-        port='/dev/ttyUSB1',
-        baudrate=9600,
-        parity=serial.PARITY_ODD,
-        stopbits=serial.STOPBITS_TWO,
-        bytesize=serial.SEVENBITS
-    )
+    try:
+        # Configure serial comminunication RaspberryPi-Arduino
+        ser = serial.Serial(
+            port='/dev/ttyUSB1',
+            baudrate=9600,
+            parity=serial.PARITY_ODD,
+            stopbits=serial.STOPBITS_TWO,
+            bytesize=serial.SEVENBITS
+        )
+        # Try to open port
+        ser.isOpen()
+        logging.info("Serial communication opened to: %s" %ser.portstr)
 
-    ser.isOpen()
+    except IOError: # if port is already opened, close it and open it again and print message
+      logging.critical("IOError recieved, trying to open the port in 2s")
+      ser.close()
+      time.sleep(2)
+      ser.open()
+      logging.warning("Port was already open, was closed and opened again.")
+
+    return ser
 
 
 #####################################
@@ -240,6 +251,7 @@ try:
     thread.start()
     logging.info('Starting webserver on port %d', PORT )
 
+    # Init the camera
     initCamera(camera, context)
 
     if camera == None :
@@ -250,18 +262,54 @@ try:
 
     if not testMode :
         # Init the serial port
-        # initSerial()
+        # ser = initSerial()
         logging.info('Starting serial communication' )
     else :
         logging.info('Starting program in interactive mode')
-        input()
+
     # Main business here
+
+    # Available functions :
+    # takePicture
+    # ready
+
+    input=1
+    while True :
+        # get keyboard input
+        if not testMode :
+            command = ser.readline()
+        else :
+            command = raw_input("Enter your command : ")
+
+        logging.debug("Command received : %s" %command)
+
+        if command == 'takePhoto':
+            pictureName = takePhoto(camera,pictureFolder)
+
+            logging.info("Triggered postprocessing script")
+            # Send the clear signal to Arduino
+            ser.write(input + '\r\n')
+
+        elif command == "ready" :
+            # Do nothing
+
+        else :
+            # (note that I happend a \r\n carriage return and line feed to the characters - this is requested by my device)
+            ser.write(input + '\r\n')
+            out = ''
+            # let's wait one second before reading output (let's give device time to answer)
+            time.sleep(1)
+            while ser.inWaiting() > 0:
+                out += ser.read(1)
+
+            if out != '':
+              print ">>" + out
 
 except Exception:
     logging.error("Caught unexpected exception:")
     logging.error(traceback.format_exc())
-    logging.info("Going to sleep 2 seconds and restart")
-    #time.sleep(2)
-    #restart()
+    logging.warning("Going to sleep 2 seconds and restart")
+    time.sleep(2)
+    restart()
 
 sys.exit(0)
