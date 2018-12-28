@@ -9,26 +9,26 @@
 
 
   NOTES
-    * Pushbutton-pins are configured to use internal pullup resistors 
-      of the Arduino for less external parts. If you want to use external 
+    * Pushbutton-pins are configured to use internal pullup resistors
+      of the Arduino for less external parts. If you want to use external
       pullup resistors change INPUT_PULLUP to INPUT in setup().
     * Set your camera to continuous focus for best results.
-    * Use exposure compensation to compensate the dimmed focusing light. 
+    * Use exposure compensation to compensate the dimmed focusing light.
       Values arround -1 EV work best for me in low light situations.
     * You might also need to adjust values in takePhoto() to your needs.
       Brightness and delays might be different with different LED-bulbs.
-    * Serial speed is 9600 Baud. See processCommand() for a complete 
+    * Serial speed is 9600 Baud. See processCommand() for a complete
       list of supported commands.
     * There is support for multiple pushbuttons - although only one is used
       by now. When connecting to a Raspberry Pi a second pushbutton might be
-      used to shut the Pi down due to its lack of a power-down-button. 
+      used to shut the Pi down due to its lack of a power-down-button.
     * analogWrite() works only on Pins 3, 5, 6, 9, 10, 11 - that's why the LED-spots
       are connected to pins 10, 11, 5, 6 so we can get dimmed focusing light.
     * Make sure to connect all pushbutton LEDs to PWM outputs so the breathing
       will work.
-    * Read the datasheet of your 7-segment-display for pin-layout. 
+    * Read the datasheet of your 7-segment-display for pin-layout.
       Connect this way:
-    
+
        Segment     Pin (7-segment) Pin (Darlington)    Pin (Arduino)
           A         1               1-18                13
           B         8               4                   8
@@ -41,16 +41,16 @@
 
       Use darlington array and and current limiting resistors as appropriate.
     * See repository for example circuit.
-    
+
     * This software is free and provided "as is" - but I appreciate a donation when
       you make money off it (e.g. as a commercial photographer).
 
 
   LICENSE
-  
+
   The MIT License (MIT)
 
-  Copyright (c) 2015  Harm Aldick 
+  Copyright (c) 2015  Harm Aldick
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -103,7 +103,7 @@ byte segment_digits[10][7] = { // segments to light up on the corresponding inde
   { 0,1,1,0,0,1,1 },    // 4
   { 1,0,1,1,0,1,1 },    // 5
   { 1,0,1,1,1,1,1 },    // 6
-  { 1,1,1,0,0,0,0 },    // 7 
+  { 1,1,1,0,0,0,0 },    // 7
   { 1,1,1,1,1,1,1 },    // 8
   { 1,1,1,1,0,1,1 }     // 9
 };
@@ -137,36 +137,36 @@ void setup() {
     pinMode(segment_pins[i], OUTPUT);
     digitalWrite(segment_pins[i], LOW);
   }
-  
-  // Turn all spots off.
+
+  // Turn all spotsOff.
   for(int i = 0; i < sizeof(spot_pins)/sizeof(int); i++) {
     digitalWrite(spot_pins[i], 0);
   }
-  
+
   // Set all pushbutton-LED-pins as output and turn LEDs off
   for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
     pinMode(button_led[i], OUTPUT);
     digitalWrite(button_led[i], LOW);
   }
-  
+
   // Set all pushbutton-pins as input and enable pullup resistor
   for(int i = 0; i < sizeof(button_pin)/sizeof(int); i++) {
     pinMode(button_pin[i], INPUT_PULLUP); // change INPUT_PULLUP to INPUT when there is an external pullup-resistor attached
   }
-  
+
   // setup focus and shutter pins
   //pinMode(pin_focus, OUTPUT);
   //digitalWrite(pin_focus, LOW);
   //pinMode(pin_shutter, OUTPUT);
   //digitalWrite(pin_shutter, LOW);
-  
-  
+
+
   Serial.begin(9600); // initialize serial
 
   inputCommand.reserve(100); // reserve 100 bytes for the inputCommand
 
   breathing_reset(); // reset breathing LEDs
-  
+
   Serial.println("ready"); // we're ready to rock!
 }
 
@@ -202,9 +202,9 @@ void breathing_do_step() {
   if(!breathing_enabled) {
     return;  // nothing to do if disabled
   }
-  
+
   breath_delay--;
-  
+
   // update brightness and delays when waited long enough
   if(breath_delay == 0) {
     // increase or decrese brightness
@@ -212,22 +212,22 @@ void breathing_do_step() {
 
     // change direction when LED is fully lit or very dimm
     if(breath_brightness == 255 || breath_brightness == 15) {
-      breath_direction *= -1; 
+      breath_direction *= -1;
     }
-  
+
     // update index of current delay when target brightness is reached
     if(breath_brightness == breath_brightness_steps[breath_index]) {
       breath_index++;
-      
+
       // start over when the end is reached
       if(breath_index == sizeof(breath_brightness_steps)/sizeof(int)) {
         breath_index = 0;
       }
     }
- 
+
     // get new delay
     breath_delay = breath_delay_steps[breath_index];
-  
+
     // set new brightness to all pushbutton leds
     for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
       analogWrite(button_led[i], breath_brightness);
@@ -244,7 +244,7 @@ void animation_one(int wait) {
   for (int i = 0; i < sizeof(segment_pins)/sizeof(int); i++) {
     digitalWrite(segment_pins[i], LOW);
   }
-  
+
   for(int n = 0; n < 5; n++) {
     for (int i = 0; i < 6; i++) {
       digitalWrite(segment_pins[i], HIGH);
@@ -258,11 +258,11 @@ void animation_one(int wait) {
 /* flashes the 7-segment-display in another fancy way */
 void animation_two(int wait) {
   int animation[] = { 1, 2, 7, 5, 4, 3, 7, 6 };
-  
+
   for (int i = 0; i < sizeof(segment_pins)/sizeof(int); i++) {
     digitalWrite(segment_pins[i], LOW);
   }
-  
+
   for(int n = 0; n < 5; n++) {
     for(int i = 0; i < 8; i++) {
       int segment = animation[i] - 1;
@@ -279,12 +279,12 @@ void animation_spots(int wait) {
   for (int i = 0; i < sizeof(spot_pins)/sizeof(int); i++) {
     spot_off(i);
   }
-  
+
   for (int i = 0; i < sizeof(spot_pins)/sizeof(int); i++) {
     spot_on(i);
     delay(wait);
     spot_off(i);
-  }    
+  }
 }
 
 
@@ -300,7 +300,7 @@ void spot_off(int i) {
 }
 
 
-/* turns all spots on ("speedlight") */
+/* turns all spotsOn ("speedlight") */
 void spots_on() {
   for (int i = 0; i < sizeof(spot_pins)/sizeof(int); i++) {
     spot_on(i);
@@ -308,7 +308,7 @@ void spots_on() {
 }
 
 
-/* turns all spots off */
+/* turns all spotsOff */
 void spots_off() {
   for (int i = 0; i < sizeof(spot_pins)/sizeof(int); i++) {
     spot_off(i);
@@ -316,7 +316,7 @@ void spots_off() {
 }
 
 
-/* turns all spots on (dimmed) for fucusing the camera in low light */
+/* turns all spotsOn (dimmed) for fucusing the camera in low light */
 void spots_dimm(int value) {
   for (int i = 0; i < sizeof(spot_pins)/sizeof(int); i++) {
     analogWrite(spot_pins[i], value);
@@ -332,7 +332,7 @@ void displayNumber(int n) {
 }
 
 
-/* turns the 7-segment-display off */
+/* turns the 7-segment-displayOff */
 void display_off() {
   for (int i = 0; i < sizeof(segment_pins)/sizeof(int); i++) {
     digitalWrite(segment_pins[i], LOW);
@@ -356,7 +356,7 @@ void takePhoto() {
   digitalWrite(pin_focus, HIGH);
 
   animation_one(50);
-  
+
   displayNumber(3);
   delay(1000);
   displayNumber(2);
@@ -366,7 +366,7 @@ void takePhoto() {
   Serial.println("do_focus");
   displayNumber(1);
   delay(1000);
-  
+
   display_off();
 
   //spots_on();
@@ -375,12 +375,12 @@ void takePhoto() {
   digitalWrite(pin_shutter, HIGH);
 
   delay(400);
-  
+
   clearAll();
 
   //digitalWrite(pin_focus, LOW);
   //digitalWrite(pin_shutter, LOW);
-  
+
   Serial.println("Photo taken.");
 }
 
@@ -397,48 +397,48 @@ void processCommand(String cmd) {
   if(cmd == "8") displayNumber(8);
   if(cmd == "9") displayNumber(9);
   if(cmd == "0") displayNumber(0);
-  
-  if(cmd == "display off") display_off();
 
-  if(cmd == "spots on") spots_on();
-  if(cmd == "spots off") spots_off();
-  if(cmd == "spots dimm") spots_dimm(1);
-  
-  if(cmd == "S1 on") spot_on(0);
-  if(cmd == "S1 off") spot_off(0);
-  if(cmd == "S2 on") spot_on(1);
-  if(cmd == "S2 off") spot_off(1);
-  if(cmd == "S3 on") spot_on(2);
-  if(cmd == "S3 off") spot_off(2);
-  if(cmd == "S4 on") spot_on(3);
-  if(cmd == "S4 off") spot_off(3);  
-  
-  if(cmd == "animation 1") animation_one(50);
-  if(cmd == "animation 2") animation_two(50);
-  if(cmd == "animation spots") animation_spots(100);
-  
+  if(cmd == "displayOff") display_off();
+
+  if(cmd == "spotsOn") spots_on();
+  if(cmd == "spotsOff") spots_off();
+  if(cmd == "spotsDimm") spots_dimm(1);
+
+  if(cmd == "S1_on") spot_on(0);
+  if(cmd == "S1_off") spot_off(0);
+  if(cmd == "S2_on") spot_on(1);
+  if(cmd == "S2_off") spot_off(1);
+  if(cmd == "S3_on") spot_on(2);
+  if(cmd == "S3_off") spot_off(2);
+  if(cmd == "S4_on") spot_on(3);
+  if(cmd == "S4_off") spot_off(3);
+
+  if(cmd == "animation1") animation_one(50);
+  if(cmd == "animation2") animation_two(50);
+  if(cmd == "animationSpots") animation_spots(100);
+
   if(cmd == "clear") clearAll();
- 
-  if(cmd == "mode auto") mode_auto = true;
-  if(cmd == "mode manual") mode_auto = false;
-  
-  if(cmd == "take photo") takePhoto();
+
+  if(cmd == "modeAuto") mode_auto = true;
+  if(cmd == "modeManual") mode_auto = false;
+
+  if(cmd == "takePhoto") takePhoto();
 }
 
 
 /* reads new input from serial to commandstring. Command is complete on \n */
 void serialEvent() {
   while(Serial.available()) {
-    char inChar = (char)Serial.read(); 
+    char inChar = (char)Serial.read();
     if(inChar == '\n') {
       commandComplete = true;
     } else {
-      inputCommand += inChar; 
+      inputCommand += inChar;
     }
   }
 }
 
-// This loop function runs over and over again. 
+// This loop function runs over and over again.
 void loop() {
 
   breathing_do_step(); // do one step in "breathing"
@@ -449,10 +449,10 @@ void loop() {
       if (lastButtonState[i] == HIGH) {               // and was not pressed before
         lastButtonState[i] = LOW;                     // save current state (pressed)
         if(mode_auto) {                               // in standalone-mode...
-          inputCommand = "take photo";                // set command
+          inputCommand = "takePhoto";                // set command
           commandComplete = true;
         } else {                                      // in remote-controlled mode...
-          Serial.println("button pressed");             // notify computer 
+          Serial.println("button pressed");             // notify computer
         }
       }
       delay(250);                                  // poor mans debouncing
@@ -469,7 +469,7 @@ void loop() {
 
     inputCommand = "";            // reset the commandstring
     commandComplete = false;      // reset command complete
-    
+
     Serial.println("ready");      // notify computer
   }
 }
