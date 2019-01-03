@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
+import os, os.path
 import sys
 import time
 import signal
@@ -12,11 +12,14 @@ import argparse
 import gzip
 import gphoto2 as gp
 import serial
-import RPi.GPIO as GPIO
 import threading
 import SimpleHTTPServer
 import SocketServer
 
+# Project-related imports
+import photobooth_serial as pb_serial
+import photobooth_camera as pb_camera
+import photobooth_image as pb_image
 
 #####################################
 # FUNCTIONS
@@ -24,8 +27,6 @@ import SocketServer
 # Manage Ctrl+C gracefully
 def signal_handler_quit(signal, frame):
     logging.info("Shutting down requested")
-    GPIO.cleanup()
-    logging.debug("Cleaned up GPIO's")
 
     webserver.shutdown()
     logging.debug("Webserver shutdown")
@@ -36,6 +37,8 @@ def signal_handler_quit(signal, frame):
     logging.critical("Photob00th shutdown.\n")
     sys.exit(0)
 
+
+# Class to create the WebServer and to log the requests in a separate file
 class CustomHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -49,74 +52,6 @@ class CustomHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         self.log_file.write("%s - [%s] : %s\n" %(
             self.client_address[0],self.log_date_time_string(),format%args))
-
-# Init the camera, opens the connections and set the target to the SD card
-def initCamera(camera, context):
-    # Detects the camera
-    while True:
-        error = gp.gp_camera_init(camera, context)
-        if error >= gp.GP_OK:
-            # Camera detected, get the model
-            logging.info("Camera detected")
-            break
-        if error != gp.GP_ERROR_MODEL_NOT_FOUND:
-            # some other error we can't handle here
-            raise gp.GPhoto2Error(error)
-        else :
-            # no camera, try again in 2 seconds
-            logging.error("Camera not found, trying again in 2s...")
-            time.sleep(2)
-
-    # Get configuration tree
-    cameraConfig = gp.check_result(gp.gp_camera_get_config(camera))
-    # Get Camera model
-    cameraNameWidget = gp.check_result(
-                gp.gp_widget_get_child_by_name(cameraConfig, 'model'))
-    cameraName = ""
-    cameraName = gp.check_result(
-                    gp.gp_widget_get_value(cameraNameWidget))#, cameraName))
-    logging.info("Camera model : %s" %cameraName)
-
-    # Find the capture target config item
-    captureTarget = gp.check_result(
-        gp.gp_widget_get_child_by_name(cameraConfig, 'capturetarget'))
-
-    value = 1 # 0 is for internal memory, 1 is for SD card
-    # Check value in range
-    count = gp.check_result(gp.gp_widget_count_choices(captureTarget))
-    if value < 0 or value >= count:
-        logging.error('Parameter out of range')
-        return 1
-    # set value
-    value = gp.check_result(gp.gp_widget_get_choice(captureTarget, value))
-    gp.check_result(gp.gp_widget_set_value(captureTarget, value))
-    # set config
-    gp.check_result(gp.gp_camera_set_config(camera, cameraConfig))
-
-    return camera
-
-# Captures an image, take the current time and save in into the inputted folder.
-# Input : GPhoto camera object, Folder where to save the pictures
-# Output : name of the latest picture taken
-def takePhoto(camera, pictureFolder):
-    logging.info('Capturing image...')
-    file_path = gp.check_result(gp.gp_camera_capture(
-        camera, gp.GP_CAPTURE_IMAGE))
-    logging.debug('Picture path: {0}/{1}'.format(file_path.folder, file_path.name))
-    # Get the name of the picture just taken
-    pictureFile = gp.check_result(gp.gp_camera_file_get(
-            camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
-
-    # Build a timestamp to name the picture
-    now = time.time()
-    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
-    newPictureFile = os.path.join(pictureFolder, timestamp)
-
-    # Save the picture to the indicated folder
-    gp.check_result(gp.gp_file_save(pictureFile, newPictureFile))
-    logging.info('New picture : ', newPictureFile)
-
-    return timestamp
 
 
 #################################
@@ -166,7 +101,7 @@ def configureLogging(numeric_level, logfile, console):
         # add the handler to the root logger
         logging.getLogger("").addHandler(filehandler)
 
-    logging.infox("Logging level set to %s", logging_level(numeric_level))
+    logging.info("Logging level set to %s", logging_level(numeric_level))
 
     # Have Gphot2 lgos in python logging module
     gp.use_python_logging()
@@ -188,6 +123,8 @@ def createParser():
                       help='Enable logging output on STDOUT')
     parser.add_argument('-t', '--test', action='store_true', \
                         help='Run the program interactively to simulate Arduino communication. User will have to provide the commands to take pictures, etc...')
+    parser.add_argument('-n', '--no-filter', action='store_false', dest="noFilter", \
+                      help='Disables the instagram-like filter when processing the images.')
     return parser
 
 def restart():
@@ -195,32 +132,10 @@ def restart():
     logging.info('Re-spawning %s' % ' '.join(args))
 
     args.insert(0, sys.executable)
-
+    time.sleep(1)
     os.chdir(_startup_cwd)
     os.execv(sys.executable, args)
 
-def initSerial():
-    try:
-        # Configure serial comminunication RaspberryPi-Arduino
-        ser = serial.Serial(
-            port='/dev/ttyUSB1',
-            baudrate=9600,
-            parity=serial.PARITY_ODD,
-            stopbits=serial.STOPBITS_TWO,
-            bytesize=serial.SEVENBITS
-        )
-        # Try to open port
-        ser.isOpen()
-        logging.info("Serial communication opened to: %s" %ser.portstr)
-
-    except IOError: # if port is already opened, close it and open it again and print message
-      logging.critical("IOError recieved, trying to open the port in 2s")
-      ser.close()
-      time.sleep(2)
-      ser.open()
-      logging.warning("Port was already open, was closed and opened again.")
-
-    return ser
 
 
 #####################################
@@ -230,10 +145,16 @@ parser       = createParser()
 results      = parser.parse_args()
 testMode     = results.test
 _startup_cwd = os.getcwd()
+pictureFolder = "images/jpg"
+batt_lvl     = 25
+
+pb_image.enableFilter = results.noFilter
+
+# Init the Gphoto2 objects
 context      = gp.Context()
 camera       = gp.Camera()
-pictureFolder = os.getcwd() + "/images/jpg"
 
+arduino = None
 
 log = configureLogging(results.verbose, results.output_file, results.console)
 
@@ -251,21 +172,29 @@ try:
     thread.start()
     logging.info('Starting webserver on port %d', PORT )
 
-    # Init the camera
-    initCamera(camera, context)
-
-    if camera == None :
-        logging.error("Error initializing camera")
-        sys.exit(2)
-    else :
-        logging.info('Camera initialized')
-
     if not testMode :
+        # Init the camera
+        pb_camera.initCamera(camera, context)
+
+        if camera == None :
+            logging.error("Error initializing camera")
+            sys.exit(2)
+        else :
+            logging.info('Camera initialized')
+
         # Init the serial port
-        # ser = initSerial()
+        pb_serial.initSerial(arduino)
         logging.info('Starting serial communication' )
+
+
     else :
         logging.info('Starting program in interactive mode')
+
+    # Get the image count
+    pb_image.getImageCount()
+    logging.info("Image count : %d" %pb_image.count)
+
+    pb_image.postProcess("1.jpg")
 
     # Main business here
 
@@ -275,32 +204,35 @@ try:
 
     input=1
     while True :
-        # get keyboard input
+        # Get keyboard input
         if not testMode :
-            command = ser.readline()
+            command = arduino.readline()
         else :
             command = raw_input("Enter your command : ")
 
         logging.debug("Command received : %s" %command)
 
         if command == 'takePhoto':
-            pictureName = takePhoto(camera,pictureFolder)
+            pictureName = pb_camera.takePhoto(camera, pictureFolder)
 
             logging.info("Triggered postprocessing script")
+
+            pb_image.postProcess(pictureName)
+
             # Send the clear signal to Arduino
-            ser.write(input + '\r\n')
+            #arduino.write("clear" + '\r\n')
 
         elif command == "ready" :
             # Do nothing
-
+            logging.info("Ready")
         else :
             # (note that I happend a \r\n carriage return and line feed to the characters - this is requested by my device)
-            ser.write(input + '\r\n')
+            arduino.write(input + '\r\n')
             out = ''
             # let's wait one second before reading output (let's give device time to answer)
             time.sleep(1)
-            while ser.inWaiting() > 0:
-                out += ser.read(1)
+            while arduino.inWaiting() > 0:
+                out += arduino.read(1)
 
             if out != '':
               print ">>" + out
@@ -310,6 +242,7 @@ except Exception:
     logging.error(traceback.format_exc())
     logging.warning("Going to sleep 2 seconds and restart")
     time.sleep(2)
-    restart()
+    # Cancelled the restart for testing purposes
+    #restart()
 
 sys.exit(0)
