@@ -14,11 +14,12 @@ import logging
 #                output_image_path='2018-11-30_20:12:39_scaled.jpg',
 #                width=1920)
 
-
+# Default locations
 processedFolder = "images/processed"
 imageFolder     = "images/jpg"
 image_count     = "image_count.txt"
 count           = 0
+# Set up by the options ""--no-filter"
 enableFilter     = True
 
 # Reads the image count from the file
@@ -167,7 +168,7 @@ def postProcess(imageFile):
                 os.path.join(imageFolder, resizedImage), width=1920)
 
         # Delete original file
-        os.remove(os.path.join(imageFolder, imageFile)) 
+        os.remove(os.path.join(imageFolder, imageFile))
 
         # Apply Instagram filter and moved the picture in the proceesed folder
         applyFilter(os.path.join(imageFolder, resizedImage), newPictureFile)
