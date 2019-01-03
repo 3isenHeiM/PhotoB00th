@@ -60,7 +60,7 @@ By order of importance...
 
 
 ## Workflow
-Here is the workflow I intially intend for this project :
+Here is the workflow I initially intend for this project :
 1. Push the red button
 2. Countdown from 3 to 0 :
     - Count using the 7-segment display
@@ -69,7 +69,7 @@ Here is the workflow I intially intend for this project :
     - At "1", ask the RPi to do the focus
     - Display the camera preview on a VGA screen
 3. Trigger picture and light the LEDs more
-4. Downlaoad the picture (raw/jpg?) on the RaspberryPi's external storage
+4. Download the picture (raw/jpg?) on the RaspberryPi's external storage
 5. Move a jpg version to the webserver backend
 6. Reset the setup
 
@@ -88,7 +88,7 @@ Initial state :
     - Light the button for 0.5s
 3. After 1s :
     - Display "1" on the 7-segment display for 1s
-    - Send commant "`do_focus`" via serial to the RPi
+    - ~~Send command "`do_focus`" via serial to the RPi~~
     - Light the button for 0.5s
 4. Take the photo :
     - Increase lights of the LED to 100%
@@ -99,11 +99,12 @@ Initial state :
 ### Raspberry Pi State machine
 
 Initial state :
- - Waiting for command "`do_focus`" from the Arduino
+ - ~~Waiting for command "`do_focus`" from the Arduino~~
+ - Makes the LEDs breathe
 
-1. When `do_focus` is received :
-    - use gphoto to do the focus (not sure if supported)
-2. When `take-picture` is received :
+1. ~~When `do_focus` is received :~~
+    - ~~use gphoto to do the focus (not sure if supported)~~
+2. When `takePicture` is received :
     - use gphoto to `capture-image-and-download`
     - send `picture_taken` to Arduino
 3. Post-process the image :
@@ -163,8 +164,9 @@ When the control pin is high, the Darlington array pulls down the output pin (at
 - [x] Auto-poweroff of the USB connectivity (tests made on MacOS)  
     Solution found [here](http://gphoto-software.10949.n7.nabble.com/canon-autopoweroff-tp14943p14958.html) : use the `wait-event` function, it send a keepalive message to the camera.
     Will be tested.
-    Edit : the AutoPoweroff of the CanonESO 700D has been disabled on the Camera itself.Once done, no mor einterruption in the gphoto detection of the camera.
-- [ ] Impossible to trigger the focus of the camera itself. State machine has been updated.
+    Edit : the AutoPoweroff of the CanonESO 700D has been disabled on the Camera itself.Once done, no more interruption in the gphoto detection of the camera.
+- [ ] ~~Impossible to trigger the focus of the camera itself. State machine has been updated.~~
+      Impossible to do using gphoto2.
 
 ## Canon EOS 700D support
-I used a Canon EOS 700D DSLR camera, the [following page](CanonEOS700D.md) liksts the suported operations of gphoto for this type of camera
+I used a Canon EOS 700D DSLR camera, the [following page](CanonEOS700D.md) lists the supported operations of gphoto for this type of camera
