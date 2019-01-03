@@ -14,6 +14,19 @@ import gphoto2 as gp
 import serial
 import RPi.GPIO as GPIO
 
+# Setup the serial port
+ser = serial.Serial(
+    port='/dev/ttyUSB1',
+    baudrate=9600,
+    parity=serial.PARITY_ODD,
+    stopbits=serial.STOPBITS_TWO,
+    bytesize=serial.SEVENBITS
+)
+
+# Try to open port
+ser.isOpen()
+print("Serial communication opened to: %s" %ser.portstr)
+
 
 print 'Enter your commands below.\r\nInsert "exit" to leave the application.'
 
