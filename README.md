@@ -76,12 +76,12 @@ Here is the workflow I initially intend for this project :
 ### Arduino State machine
 
 Initial state :
- - LED is "breathing" (cf Snippets.md)
+ - buttonLED is "breathing" (cf Snippets.md)
  - Wait for event on the button
+ - Listening for any command in the serial port
 
 1. When button is pressed :  
     - Display "3" on 7-segment display for 1s
-    - Light the LEDs up
     - Light the button for 0.5s
 2. After 1s :
     - Display "2" on the 7-segment display for 1s
@@ -92,22 +92,22 @@ Initial state :
     - Light the button for 0.5s
 4. Take the photo :
     - Increase lights of the LED to 100%
-    - Send command "`take_picture`" via serial to the RPi
-    - Wait for command "`picture_taken`" from the serial port
+    - Send command "`takePhoto`" via serial to the RPi
+    - ~~Wait for command "`picture_taken`" from the serial port~~
 5. Get back to initial state
 
 ### Raspberry Pi State machine
 
 Initial state :
  - ~~Waiting for command "`do_focus`" from the Arduino~~
- - Makes the LEDs breathe
+ - Listens for the command "`takePhoto`"
 
 1. ~~When `do_focus` is received :~~
     - ~~use gphoto to do the focus (not sure if supported)~~
-2. When `takePicture` is received :
-    - use gphoto to `capture-image-and-download`
-    - send `picture_taken` to Arduino
-3. Post-process the image :
+2. When `takePhoto` is received :
+    - use gphoto to capture the image and download it
+    - ~~send `picture_taken` to Arduino~~
+3. Post-process the image in a separate thread :
     - Apply a filter ? (if fast enough : 3-4s)
     - Move it the the correct folder
     - Rename it
