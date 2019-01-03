@@ -161,7 +161,7 @@ void setup() {
   //digitalWrite(pin_shutter, LOW);
 
 
-  Serial.begin(9600); // initialize serial
+  Serial.begin(115200); // initialize serial
 
   inputCommand.reserve(100); // reserve 100 bytes for the inputCommand
 
@@ -452,7 +452,7 @@ void loop() {
           inputCommand = "takePhoto";                // set command
           commandComplete = true;
         } else {                                      // in remote-controlled mode...
-          Serial.println("button pressed");             // notify computer
+          Serial.println("takePhoto");             // notify computer
         }
       }
       delay(250);                                  // poor mans debouncing
