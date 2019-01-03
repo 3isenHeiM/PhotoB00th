@@ -156,7 +156,7 @@ The load (led+7-segment display) has 2 connections :
 
 When the control pin is high, the Darlington array pulls down the output pin (at +12V) to the Ground. And the current flows and you have current in whatever load you have put between the Darlington output pin and the power sypply.
 
-## Stepping stones
+## Stepping stones / To-Do
 - [x] Dim the 12V LEDs using the Raspberry and a Darlington array (since they are 12V-powered)   
     Solution : Use an Arduino Uno for all GPIO-related events.
 - [x] DSLR is not recognized by the Ubuntu   
@@ -165,8 +165,11 @@ When the control pin is high, the Darlington array pulls down the output pin (at
     Solution found [here](http://gphoto-software.10949.n7.nabble.com/canon-autopoweroff-tp14943p14958.html) : use the `wait-event` function, it send a keepalive message to the camera.
     Will be tested.
     Edit : the AutoPoweroff of the CanonESO 700D has been disabled on the Camera itself.Once done, no more interruption in the gphoto detection of the camera.
-- [ ] ~~Impossible to trigger the focus of the camera itself. State machine has been updated.~~
+- [ ] ~~Impossible to trigger the focus of the camera itself. State machine has been updated.~~  
       Impossible to do using gphoto2.
+- [ ] Handles the warning exception of skimage ()'Possible precision loss when converting from float64 to uint8')
+- [ ] Threadize the post-processing
+
 
 ## Canon EOS 700D support
 I used a Canon EOS 700D DSLR camera, the [following page](CanonEOS700D.md) lists the supported operations of gphoto for this type of camera
