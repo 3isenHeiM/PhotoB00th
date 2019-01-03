@@ -2,13 +2,13 @@
 
 Here a a couple of code snippets I used during this projet.
 
-## List the capabilities of a camera : 
+## List the capabilities of a camera :
 `gphoto2 --list-all-config >config.txt`
 
 
 Display `config.txt` to see what is supported.
 
-## Disable IPv6 on Raspberry 
+## Disable IPv6 on Raspberry
 Reference [here](https://askubuntu.com/a/309463/217297)
 
 ## Python Serail port and commands
@@ -57,7 +57,7 @@ while 1 :
 ## Capture and download using python
 
 From python-gphoto2 [examples](https://github.com/jim-easterbrook/python-gphoto2/blob/master/examples/capture-image.py).
-Two functions are used : 
+Two functions are used :
 * `gp.gp_camera_capture(camera, gp.GP_CAPTURE_IMAGE)`  
 to trigger the shot
 * `gp.gp_camera_file_get(camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL)`  
@@ -113,4 +113,46 @@ def main():
 
 if __name__ == "__main__":
 sys.exit(main())
+```
+
+## Serial communication with an Arduino
+
+from [here](https://stackoverflow.com/a/24075787/3494633)
+
+```
+#!/usr/bin/python
+import serial
+import syslog
+import time
+
+#The following line is for serial over GPIO
+port = '/dev/tty.usbmodem1411' # note I'm using Mac OS-X
+
+
+ard = serial.Serial(port,9600,timeout=5)
+time.sleep(2) # wait for Arduino
+
+i = 0
+
+while (i < 4):
+    # Serial write section
+
+    setTempCar1 = 63
+    setTempCar2 = 37
+    ard.flush()
+    setTemp1 = str(setTempCar1)
+    setTemp2 = str(setTempCar2)
+    print ("Python value sent: ")
+    print (setTemp1)
+    ard.write(setTemp1)
+    time.sleep(1) # I shortened this to match the new value in your Arduino code
+
+    # Serial read section
+    msg = ard.read(ard.inWaiting()) # read all characters in buffer
+    print ("Message from arduino: ")
+    print (msg)
+    i = i + 1
+else:
+    print "Exiting"
+exit()
 ```
