@@ -84,12 +84,9 @@
 int segment_pins[] = { 13, 8, 2, 4, 7, 12, 11}; // pins segments A-G of the display are connected to
 int spot_pins[] = { 9, 6, 5, 3};             // pins the spot-lights are connected to, use PWM-pins here
 
-// int pin_focus = 15;   // camera: focus (using analog pin A1 as digital output)
-// int pin_shutter = 16; // camera: shutter (using analog pin A2 as digital output)
-
 // TODO : check numbering of the A0 pin of the Arduino
-int button_led[] = { 10 };  // pin(s) on which the LED(s) of the pushbutton-switch(es) is/are connected to. Use PWM-pins here.
-int button_pin[] = { 1 }; // pin(s) on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
+int button_led[] = { 10 };  // pin on which the LED of the pushbutton-switch is connected to. Use PWM-pins here.
+int button_pin[] = { 1 }; // pin on which the pushbutton(s) is/are connected to. Using analog pin A0 as digital input
 int lastButtonState[] = { 1 };  // saving the last state(s) of the button(s)
 
 
@@ -153,13 +150,6 @@ void setup() {
   for(int i = 0; i < sizeof(button_pin)/sizeof(int); i++) {
     pinMode(button_pin[i], INPUT_PULLUP); // change INPUT_PULLUP to INPUT when there is an external pullup-resistor attached
   }
-
-  // setup focus and shutter pins
-  //pinMode(pin_focus, OUTPUT);
-  //digitalWrite(pin_focus, LOW);
-  //pinMode(pin_shutter, OUTPUT);
-  //digitalWrite(pin_shutter, LOW);
-
 
   Serial.begin(115200); // initialize serial
 
@@ -288,6 +278,21 @@ void animation_spots(int wait) {
 }
 
 
+/* turns the LED on the button on */
+void button_led_on(){
+  for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
+    analogWrite(button_led[i], 255);
+  }
+}
+
+
+/* turns the LED on the button on */
+void button_led_off(){
+  for(int i = 0; i < sizeof(button_led)/sizeof(int); i++) {
+    analogWrite(button_led[i], 0);
+  }
+}
+
 /* turns a single spot on */
 void spot_on(int i) {
   analogWrite(spot_pins[i], 255);
@@ -324,6 +329,8 @@ void spots_dimm(int value) {
 }
 
 
+
+
 /* displays a number on the 7-segment-display */
 void displayNumber(int n) {
   for (int i = 0; i < sizeof(segment_pins)/sizeof(int); i++) {
@@ -350,38 +357,55 @@ void clearAll() {
 
 /* starts countdown and focusing, than takes picture */
 void takePhoto() {
-  Serial.println("Taking photo.");
+  //Serial.println("Taking photo.");
 
   spots_dimm(5);
   digitalWrite(pin_focus, HIGH);
 
   animation_one(50);
 
+  // Display 3 and light the button_led
+  button_led_on();
   displayNumber(3);
-  delay(1000);
-  displayNumber(2);
-  delay(1000);
+  delay(500);
 
-  // Trigger autofocus of the camera
-  Serial.println("do_focus");
+  // Switch the button_led off
+  button_led_off();
+  delay(500);
+
+  // Display a 2 and light the button_led
+  button_led_on();
+  displayNumber(2);
+  delay(500);
+
+  // Switch the button_led off
+  button_led_off();
+  delay(500);
+
+  // Display a 1 and light the button_led
+  button_led_on();
   displayNumber(1);
-  delay(1000);
+  delay(500);
+
+  // Switch the button_led off
+  button_led_off();
+  delay(500);
 
   display_off();
 
+  // Triggers camera on the RaspberryPi
+  Serial.println("takePhoto");
+
   //spots_on();
   spots_dimm(100);
+
   delay(75);
-  digitalWrite(pin_shutter, HIGH);
 
   delay(400);
 
   clearAll();
 
-  //digitalWrite(pin_focus, LOW);
-  //digitalWrite(pin_shutter, LOW);
-
-  Serial.println("Photo taken.");
+  //Serial.println("Photo taken.");
 }
 
 
@@ -438,7 +462,7 @@ void serialEvent() {
   }
 }
 
-// This loop function runs over and over again.
+/* This loop function runs over and over again. */
 void loop() {
 
   breathing_do_step(); // do one step in "breathing"
@@ -452,7 +476,7 @@ void loop() {
           inputCommand = "takePhoto";                // set command
           commandComplete = true;
         } else {                                      // in remote-controlled mode...
-          Serial.println("takePhoto");             // notify computer
+          Serial.println("buttonPressed");             // notify computer to take a photo
         }
       }
       delay(250);                                  // poor mans debouncing
