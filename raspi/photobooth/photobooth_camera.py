@@ -18,20 +18,28 @@ def initCamera(camera, context):
     # Needed to modify global copy of camera and context variables
     #global camera, context
 
-    # Detects the camera
-    while True:
+    # Detects the camera X times
+    tryouts = 10
+    for x in range(1, tryouts+1):
         error = gp.gp_camera_init(camera, context)
         if error >= gp.GP_OK:
             # Camera detected, get the model
             logging.info("Camera detected")
             break
-        if error != gp.GP_ERROR_MODEL_NOT_FOUND:
+        elif error == gp.GP_ERROR_MODEL_NOT_FOUND:
+            # no camera, try again in 2 seconds
+            logging.error("Camera not found ("+ str(x) + "/" + str(tryouts) + "), trying again in 5s...")
+            time.sleep(5)
+        else :
             # some other error we can't handle here
             raise gp.GPhoto2Error(error)
-        else :
-            # no camera, try again in 2 seconds
-            logging.error("Camera not found, trying again in 2s...")
-            time.sleep(2)
+            logging.error("Gphoto2 error : " + error)
+            break
+
+    # Check if all tryouts have run
+    if x == tryouts :
+        logging.critical("Camera not found. Aborting initilization.")
+        return False
 
     # Get configuration tree
     cameraConfig = gp.check_result(gp.gp_camera_get_config(camera))
@@ -55,7 +63,7 @@ def initCamera(camera, context):
     count = gp.check_result(gp.gp_widget_count_choices(captureTarget))
     if value < 0 or value >= count:
         logging.error('Parameter out of range')
-        return 1
+        return False
     # set value
     value = gp.check_result(gp.gp_widget_get_choice(captureTarget, value))
     gp.check_result(gp.gp_widget_set_value(captureTarget, value))
