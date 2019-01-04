@@ -32,6 +32,7 @@ def getImageCount():
 def updateImageCount():
     file = open(image_count, 'w')
     file.write(str(count) + "\n")
+    logging.info("Updating image_count to %d" %count)
     file.close()
 
 def resizePicture(input_image_path,
