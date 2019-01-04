@@ -174,9 +174,7 @@ try:
 
     if not testMode :
         # Init the camera
-        pb_camera.initCamera(camera, context)
-
-        if camera == None :
+        if pb_camera.initCamera(camera, context) == False :
             logging.error("Error initializing camera")
             sys.exit(2)
         else :
@@ -206,7 +204,8 @@ try:
     while True :
         # Get keyboard input
         if not testMode :
-            command = arduino.readline()
+            # Read a line, decode it as UTF-8 (used by Arduino) and remove \n\r
+            command = arduino.readline().decode("utf-8").strip('\n').strip('\r')
         else :
             command = raw_input("Enter your command : ")
 
