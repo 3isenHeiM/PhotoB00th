@@ -9,6 +9,7 @@ import numpy as np
 import time
 import os, os.path
 import logging
+import warnings
 
 #     scale_image(input_image_path='2018-11-30_20:12:39.jpg',
 #                output_image_path='2018-11-30_20:12:39_scaled.jpg',
@@ -38,7 +39,10 @@ def resizePicture(input_image_path,
                 width=None,
                 height=None
                 ):
+
     original_image = Image.open(input_image_path)
+
+
     w, h = original_image.size
     logging.debug('Original picture : {wide}x{height}px '
           'high'.format(wide=w, height=h))
@@ -109,6 +113,9 @@ def channel_adjust(channel, values):
     return adjusted.reshape(orig_size)
 
 def applyFilter(imageFile,filteredImage):
+    # Deletes any warning that could arise
+    warnings.simplefilter("ignore")
+
     # 0. Open the image
     original_image = skimage.io.imread(imageFile)
     original_image = skimage.util.img_as_float(original_image)
@@ -142,7 +149,6 @@ def applyFilter(imageFile,filteredImage):
     logging.info("Picture saved to %s" %filteredImage)
 
 
-
 def postProcess(imageFile):
     global count
     start = time.time()
@@ -155,23 +161,36 @@ def postProcess(imageFile):
     newPictureFile = os.path.join(processedFolder, newPictureName)
 
     if not enableFilter :
-        # No Filter, the resizing outputs directly in the processed folder
-        resizePicture(os.path.join(imageFolder, imageFile),
-            newPictureFile, width=1920)
+        try:
+            # No Filter, the resizing outputs directly in the processed folder
+            resizePicture(os.path.join(imageFolder, imageFile),
+                newPictureFile, width=1920)
+        except IOError as e :
+            logging.critical("Failed to open image : " + str(e))
+            logging.critical("Aborting image postprocessing")
+            # Exiting the function
+            return
     else :
         # Insert "_scaled" at the end of the picture name (temp file)
         [imageName, extension] = os.path.splitext(imageFile)
         resizedImage = imageName + "_scaled" + extension
 
-        # Resize the picture
-        resizePicture(os.path.join(imageFolder, imageFile),
-                os.path.join(imageFolder, resizedImage), width=1920)
+        try:
+            # Resize the picture
+            resizePicture(os.path.join(imageFolder, imageFile),
+                    os.path.join(imageFolder, resizedImage), width=1920)
 
-        # Delete original file
-        os.remove(os.path.join(imageFolder, imageFile))
+            # Delete original file
+            #os.remove(os.path.join(imageFolder, imageFile))
 
-        # Apply Instagram filter and moved the picture in the proceesed folder
-        applyFilter(os.path.join(imageFolder, resizedImage), newPictureFile)
+            # Apply Instagram filter and moved the picture in the proceesed folder
+            applyFilter(os.path.join(imageFolder, resizedImage), newPictureFile)
+
+        except IOError as e :
+            logging.critical("Failed to open image. " + str(e))
+            logging.critical("Aborting image postprocessing")
+            # Exiting the function
+            return False
 
     elapsed = time.time() - start
     logging.info("Picture processing time : %.3fs" %elapsed)
