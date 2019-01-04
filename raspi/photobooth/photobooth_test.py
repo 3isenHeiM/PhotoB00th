@@ -121,6 +121,8 @@ def createParser():
                       help='Path/Name of log file (log level of 0). If no file specified, output only to stdout')
     parser.add_argument('-t', '--test', action='store_true', \
                         help='Do not try to control the camera')
+    parser.add_argument('-c', '--console', action='store_true',\
+                      help='Enable logging output on STDOUT')
     parser.add_argument('-n', '--no-filter', action='store_false', dest="noFilter", \
                       help='Disables the instagram-like filter when processing the images.')
     return parser
