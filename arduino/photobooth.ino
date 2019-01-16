@@ -80,8 +80,8 @@
 
 /* This is where you might define different IO-pins */
 
-
-int segment_pins[] = { 13, 8, 2, 4, 7, 12, 11}; // pins segments A-G of the display are connected to
+int segment_pins[] = { 8, 2, 13, 4, 7, 12, 11}; // pins segments A-G of the display are connected to
+//int segment_pins[] = { 13, 8, 2, 4, 7, 12, 11}; // pins segments A-G of the display are connected to
 int spot_pins[] = { 9, 6, 5, 3};             // pins the spot-lights are connected to, use PWM-pins here
 
 // TODO : check numbering of the A0 pin of the Arduino
@@ -359,10 +359,9 @@ void clearAll() {
 void takePhoto() {
   //Serial.println("Taking photo.");
 
-  spots_dimm(5);
-  digitalWrite(pin_focus, HIGH);
-
   animation_one(50);
+
+  spots_dimm(5);
 
   // Display 3 and light the button_led
   button_led_on();
@@ -389,20 +388,56 @@ void takePhoto() {
 
   // Switch the button_led off
   button_led_off();
-  delay(500);
-
+  delay(300);
   display_off();
+
+  button_led_on();
+
+  // Slight increase of the luminosity
+  spots_dimm(20);
+  delay(50);
+  spots_dimm(40);
+  delay(50);
+  spots_dimm(60);
+  delay(50);
+  spots_dimm(80);
+  delay(50);
 
   // Triggers camera on the RaspberryPi
   Serial.println("takePhoto");
 
-  //spots_on();
-  spots_dimm(100);
+  // Make the LED button blink
+  for (int i = 0; i < 15; i++) {
+    button_led_off();
+    delay(50);
+    button_led_on();
+    delay(50);
+  }
 
-  delay(75);
+  // Full brightness of the LED spots
+  spots_on();
 
-  delay(400);
+  // Make the LED button blink
+  for (int i = 0; i < 10; i++) {
+    button_led_off();
+    delay(50);
+    button_led_on();
+    delay(50);
+  }
 
+  delay(500);
+  spots_dimm(80);
+  delay(50);
+  spots_dimm(60);
+  delay(50);
+  spots_dimm(40);
+  delay(50);
+  spots_dimm(20); 
+  delay(50);
+  spots_dimm(5);
+  delay(50); 
+  
+  
   clearAll();
 
   //Serial.println("Photo taken.");
