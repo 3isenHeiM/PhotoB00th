@@ -7,6 +7,7 @@ import time
 import signal
 import traceback
 import logging
+import datetime
 from logging import handlers
 import gzip
 import gphoto2 as gp
@@ -97,14 +98,15 @@ def takePhoto(camera, pictureFolder):
 
     # Build a timestamp to name the picture
     now = time.time()
-    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
-    newPictureFile = os.path.join(pictureFolder, timestamp)
+    timestamp = datetime.datetime.fromtimestamp(now).strftime('%Y-%m-%d_%H:%M:%S')
+    extension = '.jpg'
+    newPictureFile = os.path.join(pictureFolder, timestamp + extension)
 
     # Save the picture to the indicated folder
     gp.check_result(gp.gp_file_save(pictureFile, newPictureFile))
     logging.info('New picture : %s' %newPictureFile)
 
-    return timestamp
+    return timestamp + extension
 
 # Returns True is the camera battery falls under a threshold
 def checkBattery(camera, batt_lvl):
