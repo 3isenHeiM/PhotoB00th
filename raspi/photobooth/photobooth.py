@@ -172,14 +172,14 @@ try:
     thread.start()
     logging.info('Starting webserver on port %d', PORT )
 
-    if not testMode :
-        # Init the camera
-        if pb_camera.initCamera(camera, context) == False :
-            logging.error("Error initializing camera")
-            sys.exit(2)
-        else :
-            logging.info('Camera initialized')
+    # Init the camera
+    if pb_camera.initCamera(camera, context) == False :
+        logging.error("Error initializing camera")
+        sys.exit(2)
+    else :
+        logging.info('Camera initialized')
 
+    if not testMode :
         # Init the serial port
         pb_serial.initSerial(arduino)
         logging.info('Starting serial communication' )
