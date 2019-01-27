@@ -98,7 +98,7 @@ def takePhoto(camera, pictureFolder):
 
     # Build a timestamp to name the picture
     now = time.time()
-    timestamp = datetime.datetime.fromtimestamp(now).strftime('%Y-%m-%d_%H:%M:%S')
+    timestamp = datetime.datetime.fromtimestamp(now).strftime('%Y-%m-%d_%H-%M-%S')
     extension = '.jpg'
     newPictureFile = os.path.join(pictureFolder, timestamp + extension)
 
