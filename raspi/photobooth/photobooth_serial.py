@@ -13,11 +13,8 @@ import threading
 
 
 def initSerial(arduino):
-    # use global object
-    #global arduino
-
     try:
-        # Configure serial comminunication RaspberryPi-Arduino
+        # Configure serial communication RaspberryPi-Arduino
         arduino = serial.Serial(
             #port='/dev/ttyUSB1',
             port='/dev/ttyACM0',
@@ -41,4 +38,4 @@ def initSerial(arduino):
       logging.warning("Port was already open, was closed and opened again.")
 
 
-      return arduino
+    return arduino
