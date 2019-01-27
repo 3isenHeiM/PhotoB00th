@@ -181,7 +181,7 @@ try:
 
     if not testMode :
         # Init the serial port
-        pb_serial.initSerial(arduino)
+        arduino = pb_serial.initSerial(arduino)
         logging.info('Starting serial communication' )
 
 
@@ -191,8 +191,6 @@ try:
     # Get the image count
     pb_image.getImageCount()
     logging.info("Image count : %d" %pb_image.count)
-
-    pb_image.postProcess("1.jpg")
 
     # Main business here
 
@@ -211,7 +209,7 @@ try:
 
         logging.debug("Command received : %s" %command)
 
-        if command == 'takePhoto':
+        if 'takePhoto' in command :
             pictureName = pb_camera.takePhoto(camera, pictureFolder)
 
             logging.info("Triggered postprocessing script")
@@ -226,7 +224,7 @@ try:
             logging.info("Ready")
         else :
             # (note that I happend a \r\n carriage return and line feed to the characters - this is requested by my device)
-            arduino.write(input + '\r\n')
+            #arduino.write(input + '\r\n')
             out = ''
             # let's wait one second before reading output (let's give device time to answer)
             time.sleep(1)
