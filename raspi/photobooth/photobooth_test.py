@@ -185,11 +185,8 @@ try:
     pb_image.getImageCount()
     logging.info("Image count : %d" %pb_image.count)
 
-    # Main business here
-
     # Available functions :
-    # takePhoto
-    # ready
+    # - takePhoto
 
     input=1
     while True :
