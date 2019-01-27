@@ -2,9 +2,9 @@
 
 This is part of the Photob00th but might be used standalone.
 
-The Arduino interfaces will all the GPIOs (LED, buttons, etc...) and commmunicates via a Serial port with the Raspberry.
+The Arduino interfaces will all the GPIOs (LED, buttons, etc...) and communicates via a Serial port with the Raspberry.
 
-The Arduino is used to be able to dim the lisght of the big 4 LEDs. The dim is done using PWM modulation. I could not find any resources online to execute this on the RaspBerry (with 12V LEDs).
+The Arduino is used to be able to dim the lights of the big 4 LEDs. The dim is done using PWM modulation. I could not find any resources online to execute this on the RaspBerry (with 12V LEDs).
 
 ## State machine
 cf main ReadMe.md
